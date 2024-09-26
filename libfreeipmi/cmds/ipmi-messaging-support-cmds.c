@@ -1951,6 +1951,7 @@ fill_cmd_activate_session (uint8_t authentication_type,
                            uint32_t initial_outbound_sequence_number,
                            fiid_obj_t obj_cmd_rq)
 {
+  char *env_authtype_str;
   uint8_t buf[IPMI_CHALLENGE_STRING_LENGTH];
 
   if (!IPMI_AUTHENTICATION_TYPE_VALID (authentication_type)
@@ -1971,7 +1972,8 @@ fill_cmd_activate_session (uint8_t authentication_type,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_SESSION);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", authentication_type);
+  env_authtype_str = getenv("IPMI_AUTHTYPE");
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "authentication_type", env_authtype_str ? atoi(env_authtype_str) : authentication_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
